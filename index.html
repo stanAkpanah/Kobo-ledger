@@ -197,6 +197,51 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
 .cat-table .amt{font-weight:700}
 @media (max-width:720px){.cat-table .hide-sm{display:none}}
 
+/* Giving */
+.tithe-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tithe-strip .ico{width:44px;height:44px;border-radius:14px}
+.tithe-strip .ico svg{width:22px;height:22px}
+.tithe-strip .txt{flex:1 1 200px;min-width:0}
+.tithe-strip .txt b{display:block;font-size:16px}
+.tithe-strip .txt span{font-size:13px;color:var(--muted)}
+.chip.mute{background:var(--surface-2);color:var(--muted)}
+.give-table{width:100%;border-collapse:collapse;font-size:14px}
+.give-table th{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:0 8px 8px;border-bottom:1px solid var(--line)}
+.give-table th:first-child,.give-table td:first-child{text-align:left;padding-left:0}
+.give-table td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.give-table td:last-child,.give-table th:last-child{padding-right:0}
+.give-table tfoot td{font-weight:800;border-bottom:0}
+.chip .sh{display:none}
+@media (max-width:720px){.give-table .hide-sm{display:none}.give-table{font-size:13px}.give-table td,.give-table th{padding-left:5px;padding-right:5px}.give-table .chip .fl{display:none}.give-table .chip .sh{display:inline}}
+.type-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.type-list li{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:14px}
+.type-list .bar{grid-column:1/-1}
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.check{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:13.5px;font-weight:600;cursor:pointer;background:var(--surface)}
+.check input{accent-color:var(--accent);width:16px;height:16px}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* PIN lock */
+.locked main,.locked .topbar,.locked .bottomnav,.locked .fab{visibility:hidden}
+.lock{position:fixed;inset:0;z-index:90;background:var(--ground);display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:auto}
+.lock-card{width:100%;max-width:340px;display:grid;justify-items:center;gap:18px;text-align:center}
+.lock-card h2{font-size:22px}
+.lock-card p{margin:0;color:var(--muted);font-size:14px;min-height:21px}
+.lock-card p.bad{color:var(--expense);font-weight:600}
+.pin-dots{display:flex;gap:16px;margin:4px 0}
+.pin-dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--line-strong);transition:background .12s,border-color .12s}
+.pin-dots i.on{background:var(--accent);border-color:var(--accent)}
+.pin-dots.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.keypad{display:grid;grid-template-columns:repeat(3,72px);gap:14px 22px}
+.keypad button{width:72px;height:72px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font-family:var(--display);font-size:26px;font-weight:600;color:var(--ink)}
+.keypad button:active{background:var(--accent-soft)}
+.keypad button.txt{border:0;background:none;font-family:var(--body);font-size:13px;font-weight:700;color:var(--accent)}
+.keypad button.txt svg{width:26px;height:26px;color:var(--ink-2)}
+.keypad button:disabled{opacity:.35}
+.lock-confirm{display:grid;gap:12px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.lock-confirm p{text-align:left}
+
 /* Budgets */
 .budget-row{display:grid;grid-template-columns:40px 1fr 150px;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line)}
 .budget-row:last-child{border-bottom:0}
@@ -300,7 +345,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
   .budget-row .money-in{grid-column:2}
   .overlay{align-items:flex-end;padding:0}
   .sheet{border-radius:20px 20px 0 0;max-height:92%;padding-bottom:env(safe-area-inset-bottom,0px);transform:translateY(40px)}
-  .bottomnav{display:grid;grid-template-columns:repeat(3,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+  .bottomnav{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
   .bottomnav button{border:0;background:none;display:grid;justify-items:center;gap:2px;font-size:11.5px;font-weight:700;color:var(--muted);padding:6px 0}
   .bottomnav svg{width:22px;height:22px}
   .bottomnav button[aria-selected="true"]{color:var(--accent)}
@@ -321,6 +366,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
 </style>
 </head>
 <body>
+<script>try{if(localStorage.getItem('kobo-ledger-pin'))document.documentElement.classList.add('locked')}catch(e){}</script>
 
 <header class="topbar">
   <div class="topbar-in">
@@ -332,6 +378,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       <button class="tab" role="tab" data-view="overview" aria-selected="true">Overview</button>
       <button class="tab" role="tab" data-view="transactions" aria-selected="false">Transactions</button>
       <button class="tab" role="tab" data-view="budgets" aria-selected="false">Budgets</button>
+      <button class="tab" role="tab" data-view="giving" aria-selected="false">Giving</button>
     </nav>
     <div class="spacer"></div>
     <span class="sync" id="sync" title=""><i></i><span id="syncText">Loading</span></span>
@@ -374,6 +421,12 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       <div class="stat"><div class="label"><span class="dot" style="background:#7FE0BE"></span>Income</div><div class="v num" id="hInc">—</div><div class="d" id="hIncD"></div></div>
       <div class="stat"><div class="label"><span class="dot" style="background:#F4A29B"></span>Expenses</div><div class="v num" id="hExp">—</div><div class="d" id="hExpD"></div></div>
       <div class="stat rate"><div class="label">Savings rate</div><div class="v num" id="hRate">—</div><div class="meter"><i id="hRateBar" style="width:0"></i></div></div>
+    </div>
+
+    <div class="card tithe-strip" id="titheStrip">
+      <span id="tsIcon"></span>
+      <div class="txt"><b class="num" id="tsMain">—</b><span id="tsSub"></span></div>
+      <button class="btn btn-ghost" data-goto="giving">View giving</button>
     </div>
 
     <div class="grid2">
@@ -449,12 +502,43 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       <div id="budgetList"></div>
     </div>
   </section>
+  <!-- GIVING -->
+  <section class="view" id="view-giving" hidden>
+    <div class="view-head">
+      <div><h2>Giving</h2><p id="givingSub"></p></div>
+      <div class="head-actions">
+        <button class="btn btn-ghost" id="titheSetBtn">Tithe settings</button>
+        <button class="btn btn-primary" id="payTitheBtn">Record tithe</button>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="hero-main">
+        <div class="label" id="gLabel">Tithe balance</div>
+        <div class="amt num" id="gBal">—</div>
+        <div class="sub" id="gBalSub"></div>
+      </div>
+      <div class="stat"><div class="label" id="gMonthLabel">This month</div><div class="v num" id="gMonthPaid">—</div><div class="d" id="gMonthDue"></div></div>
+      <div class="stat"><div class="label" id="gYearLabel">This year</div><div class="v num" id="gYearPaid">—</div><div class="d" id="gYearDue"></div></div>
+      <div class="stat rate"><div class="label">Paid of tithe due</div><div class="v num" id="gPct">—</div><div class="meter"><i id="gPctBar" style="width:0"></i></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-head"><h3>Month by month</h3><span class="label" id="gTableLabel"></span></div>
+        <div class="cat-table-wrap"><table class="give-table num" id="giveTable"></table></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Kingdom Investment by type</h3><span class="label" id="gTypeLabel"></span></div>
+        <ul class="type-list num" id="giveTypes"></ul>
+      </div>
+    </div>
+  </section>
 </main>
 
 <nav class="bottomnav" role="tablist" aria-label="Sections">
   <button role="tab" data-view="overview" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>Overview</button>
   <button role="tab" data-view="transactions" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg>Transactions</button>
   <button role="tab" data-view="budgets" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l6.5 6.2"/></svg>Budgets</button>
+  <button role="tab" data-view="giving" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v5M9.5 4.5h5"/><path d="M5 21V12l7-5 7 5v9"/><path d="M10 21v-4a2 2 0 014 0v4"/><path d="M3 21h18"/></svg>Giving</button>
 </nav>
 <button class="fab" id="addFab" aria-label="Add transaction"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
 
@@ -480,6 +564,9 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
         <div class="field"><label for="fMethod" id="fMethodLabel">Paid with</label>
           <select id="fMethod"><option>Bank transfer</option><option>Card</option><option>Cash</option><option>POS</option><option>USSD</option><option>Mobile wallet</option></select>
         </div>
+      </div>
+      <div class="field" id="fGivingF" hidden><label for="fGiving">Giving type</label>
+        <select id="fGiving"></select>
       </div>
       <div class="field"><label for="fNote">Note</label><input id="fNote" maxlength="80" placeholder="e.g. Weekly market run"></div>
       <div class="err" id="fErr"></div>
@@ -515,6 +602,10 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
         <div class="auth-msg bad" id="ghMsg" hidden></div>
         <div class="sheet-foot"><button type="button" class="btn btn-ghost" id="ghCancel">Cancel</button><button type="submit" class="btn btn-primary" id="ghGo">Connect repository</button></div>
       </form>
+      <div class="set-row" id="pinRow"><div><b>PIN lock</b><p id="pinText"></p></div><div class="head-actions"><button class="btn btn-ghost" id="pinOffBtn" hidden>Turn off</button><button class="btn btn-ghost" id="pinBtn">Set PIN</button></div></div>
+      <div class="set-row" id="pinAfterRow" hidden><div><b>Lock automatically</b><p>When you leave the app and come back.</p></div>
+        <select class="pill" id="pinAfter" aria-label="Lock automatically"><option value="0">Immediately</option><option value="60000">After 1 minute</option><option value="300000">After 5 minutes</option><option value="-1">Only when the app opens</option></select>
+      </div>
       <div class="set-row"><div><b>Currency</b><p>Used for every amount in the app.</p></div>
         <select class="pill" id="curSel" aria-label="Currency">
           <option value="NGN">₦ Naira</option><option value="USD">$ US Dollar</option><option value="GBP">£ Pound</option><option value="EUR">€ Euro</option><option value="GHS">₵ Cedi</option><option value="KES">KSh Shilling</option><option value="ZAR">R Rand</option>
@@ -546,6 +637,45 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
         <button type="button" class="linkbtn" id="authForgot">Forgot password?</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Tithe settings -->
+<div class="overlay" id="titheOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="titheTitle">
+    <div class="sheet-head"><h3 id="titheTitle">Tithe settings</h3><button class="iconbtn" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <form class="sheet-body" id="titheForm" novalidate>
+      <div class="row2">
+        <div class="field"><label for="tPct">Tithe percentage</label><input id="tPct" inputmode="decimal" placeholder="10"></div>
+        <div class="field"><label for="tStart">Track from</label><input id="tStart" type="date"></div>
+      </div>
+      <div class="field"><span class="label">Count tithe on these income types</span><div class="check-grid" id="tCats"></div></div>
+      <p class="gh-help">Only <b>Kingdom Investment</b> expenses marked <b>Tithe</b> count as tithe paid. Offerings, seeds and other giving are tracked separately. Any balance carries over from month to month.</p>
+      <div class="err" id="tErr"></div>
+      <div class="sheet-foot"><button type="submit" class="btn btn-primary">Save settings</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- PIN lock screen -->
+<div class="lock" id="lock" hidden>
+  <div class="lock-card">
+    <div class="brand-mark" aria-hidden="true" style="width:48px;height:48px;border-radius:14px"><svg viewBox="0 0 24 24" fill="none" stroke="#7FE0BE" stroke-width="2.4" stroke-linecap="round" style="width:26px;height:26px"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg></div>
+    <h2 id="lockTitle">Enter your PIN</h2>
+    <p id="lockMsg"></p>
+    <div class="pin-dots" id="pinDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="keypad" id="keypad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button class="txt" id="lockAlt">Forgot?</button><button data-k="0">0</button>
+      <button class="txt" data-k="del" aria-label="Delete last digit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H9l-6 7 6 7h12a1 1 0 001-1V6a1 1 0 00-1-1z"/><path d="M17 9l-6 6M11 9l6 6"/></svg></button>
+    </div>
+    <div class="lock-confirm" id="lockReset" hidden>
+      <b>Reset this device?</b>
+      <p id="lockResetText"></p>
+      <div class="sheet-foot"><button class="btn btn-ghost" id="lockResetNo">Cancel</button><button class="btn btn-danger armed" id="lockResetYes">Reset this device</button></div>
+    </div>
   </div>
 </div>
 
@@ -587,6 +717,7 @@ const ICONS={
 const EXP=[['food','Food & Groceries'],['transport','Transport'],['housing','Rent & Housing'],['bills','Bills & Utilities'],['airtime','Airtime & Data'],['health','Health'],['shopping','Shopping'],['fun','Entertainment'],['education','Education'],['family','Family & Gifts'],['kingdom','Kingdom Investment'],['electricity','Electricity'],['other_exp','Other']];
 const BANKS=['First Bank','Access Bank','GTBank','FCMB','Moniepoint','Opay'];
 const METHODS=['Bank transfer','Card','Cash','POS','USSD','Mobile wallet'];
+const GIVING_TYPES=['Tithe','Offering','Seed','Thanksgiving','First fruit','Pledge','Building fund','Other giving'];
 const INC=[['salary','Salary'],['business','Business'],['freelance','Freelance'],['investment','Investments'],['gift_in','Gifts received'],['other_inc','Other income']];
 const CAT={};
 EXP.forEach(([id,name],i)=>CAT[id]={id,name,type:'expense',color:id==='other_exp'?'var(--c-other)':`var(--c${i+1})`});
@@ -650,7 +781,7 @@ function makeSamples(){
 const SAMPLES=makeSamples();
 
 /* ---------- State ---------- */
-const DEFAULT_SETTINGS={currency:'NGN',budgets:{food:150000,transport:50000,housing:180000,bills:35000,airtime:15000,fun:25000},hideSamples:false};
+const DEFAULT_SETTINGS={tithe:{percent:10,start:new Date().getFullYear()+'-01-01',exclude:[]},currency:'NGN',budgets:{food:150000,transport:50000,housing:180000,bills:35000,airtime:15000,fun:25000},hideSamples:false};
 const state={txs:[],settings:{...DEFAULT_SETTINGS,budgets:{...DEFAULT_SETTINGS.budgets}},sync:'local',period:'month',view:'overview',q:'',type:'all',cat:'all',activeMonth:5};
 
 const sb=(SUPABASE_URL&&SUPABASE_ANON_KEY&&window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
@@ -955,6 +1086,7 @@ function render(){
   if(state.view==='overview') renderOverview();
   if(state.view==='transactions') renderTransactions();
   if(state.view==='budgets') renderBudgets();
+  if(state.view==='giving') renderGiving();
 }
 
 function renderOverview(){
@@ -976,7 +1108,7 @@ function renderOverview(){
   const rate=inc>0?Math.round(net/inc*100):null;
   $('#hRate').textContent=rate===null?'—':rate+'%';
   $('#hRateBar').style.width=Math.max(0,Math.min(100,rate||0))+'%';
-  renderFlow(); renderCats(list.filter(t=>t.type==='expense'),exp); renderCatTotals(list.filter(t=>t.type==='expense'),exp,range[2]);
+  renderTitheStrip(); renderFlow(); renderCats(list.filter(t=>t.type==='expense'),exp); renderCatTotals(list.filter(t=>t.type==='expense'),exp,range[2]);
   const recent=[...allTx()].sort(sorter).slice(0,6);
   $('#recent').innerHTML=recent.length?recent.map(txRow).join(''):emptyHTML('No transactions yet','Add your income and expenses to see them here.');
 }
@@ -1031,6 +1163,78 @@ function renderCatTotals(list,total,label){
   $('#catTotals').innerHTML=`<thead><tr><th>Category</th><th class="hide-sm">Entries</th><th class="hide-sm">Share</th><th>Total spent</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>All spending</td><td class="hide-sm">${list.length}</td><td class="hide-sm">${total?'100%':'—'}</td><td>${esc(money(total))}</td></tr></tfoot>`;
 }
 $('#catTotals').addEventListener('click',e=>{const tr=e.target.closest('tbody tr');if(!tr)return;state.cat=tr.dataset.cat;state.type='all';$$('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.t==='all')));$('#catSel').value=state.cat;go('transactions');});
+
+/* ---------- Tithe & giving ---------- */
+function titheCfg(){const t=state.settings.tithe||{};return{percent:Number(t.percent)>0?Number(t.percent):10,start:t.start||DEFAULT_SETTINGS.tithe.start,exclude:Array.isArray(t.exclude)?t.exclude:[]};}
+const givingType=t=>t.giving||'Tithe';
+function titheCounts(t){const c=titheCfg();return t.type==='income'&&!c.exclude.includes(t.category)&&t.date>=c.start;}
+const isTithePaid=t=>t.type==='expense'&&t.category==='kingdom'&&givingType(t)==='Tithe';
+function titheTotals(from,to){
+  const c=titheCfg(); let inc=0,paid=0;
+  for(const t of allTx()){ if(t.date<from||t.date>to) continue;
+    if(titheCounts(t)) inc+=t.amount;
+    if(isTithePaid(t)&&t.date>=c.start) paid+=t.amount; }
+  return {inc,due:Math.round(inc*c.percent)/100,paid};
+}
+function titheBalance(){const c=titheCfg();const r=titheTotals(c.start,'9999-12-31');return{...r,bal:r.due-r.paid};}
+const prettyLong=s=>parseISO(s).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+function renderTitheStrip(){
+  const b=titheBalance(); const c=titheCfg();
+  $('#tsIcon').innerHTML=icon('kingdom');
+  if(b.due===0&&b.paid===0){$('#tsMain').textContent='Tithe tracker';$('#tsSub').textContent=`${c.percent}% of income from ${prettyLong(c.start)}. Add income to see what's due.`;return;}
+  if(b.bal>0.5){$('#tsMain').textContent=`${money(b.bal)} tithe outstanding`;$('#tsSub').textContent=`${money(b.paid)} paid of ${money(b.due)} due since ${prettyLong(c.start)}`;}
+  else{$('#tsMain').textContent=b.bal<-0.5?`Tithe up to date, ${money(-b.bal)} ahead`:'Tithe up to date';$('#tsSub').textContent=`${money(b.paid)} paid on ${money(b.inc)} income since ${prettyLong(c.start)}`;}
+}
+function renderGiving(){
+  const c=titheCfg(), n=new Date(), y=n.getFullYear();
+  $('#givingSub').textContent=`Tithe at ${c.percent}% of income, tracked from ${prettyLong(c.start)}`;
+  const b=titheBalance();
+  if(b.bal>0.5){$('#gLabel').textContent='Tithe outstanding';$('#gBal').textContent=money(b.bal);$('#gBalSub').textContent=`${money(b.due)} due on ${money(b.inc)} income, ${money(b.paid)} paid`;}
+  else{$('#gLabel').textContent='Tithe up to date';$('#gBal').textContent=b.bal<-0.5?money(-b.bal)+' ahead':money(0);$('#gBalSub').textContent=`${money(b.paid)} paid on ${money(b.inc)} income. Overpayments carry forward.`;}
+  const mr=periodRange('month'); const m=titheTotals(mr[0]<c.start?c.start:mr[0],mr[1]);
+  $('#gMonthLabel').textContent=monthName(n,'long'); $('#gMonthPaid').textContent=money(m.paid)+' paid'; $('#gMonthDue').textContent=`${money(m.due)} due on ${money(m.inc)} income`;
+  const yr=titheTotals(`${y}-01-01`<c.start?c.start:`${y}-01-01`,`${y}-12-31`);
+  $('#gYearLabel').textContent=String(y); $('#gYearPaid').textContent=money(yr.paid)+' paid'; $('#gYearDue').textContent=`${money(yr.due)} due on ${money(yr.inc)} income`;
+  const pct=b.due>0?Math.round(b.paid/b.due*100):(b.paid>0?100:0);
+  $('#gPct').textContent=b.due>0||b.paid>0?pct+'%':'—'; $('#gPctBar').style.width=Math.min(100,pct)+'%';
+  $('#payTitheBtn').textContent=b.bal>0.5?`Record tithe (${money(b.bal)})`:'Record tithe';
+  // Month by month, newest first, up to 12 months from the start date
+  const startD=parseISO(c.start); let rows='',tInc=0,tDue=0,tPaid=0;
+  for(let k=0;k<12;k++){
+    const d=new Date(y,n.getMonth()-k,1); const end=new Date(d.getFullYear(),d.getMonth()+1,0);
+    if(end<startD) break;
+    const r=titheTotals(iso(d)<c.start?c.start:iso(d),iso(end));
+    if(k>0&&r.inc===0&&r.paid===0) continue; // skip quiet months
+    tInc+=r.inc;tDue+=r.due;tPaid+=r.paid;
+    const ch=(cls,fl,sh)=>`<span class="chip ${cls}"><span class="fl">${fl}</span><span class="sh">${sh}</span></span>`;
+    const chip=r.due===0&&r.paid===0?ch('mute','No income','—'):r.paid>=r.due-0.5?ch('ok','Paid','Paid'):r.paid>0?ch('warn','Part paid','Part'):ch('over','Not paid','Unpaid');
+    rows+=`<tr><td>${esc(monthName(d,'short'))} ${d.getFullYear()}</td><td class="hide-sm">${esc(money(r.inc))}</td><td>${esc(money(r.due))}</td><td>${esc(money(r.paid))}</td><td>${chip.replace('class="chip','style="margin:0" class="chip')}</td></tr>`;
+  }
+  $('#gTableLabel').textContent='Last 12 months';
+  $('#giveTable').innerHTML=rows?`<thead><tr><th>Month</th><th class="hide-sm">Income</th><th>Due</th><th>Paid</th><th>Status</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>Total</td><td class="hide-sm">${esc(money(tInc))}</td><td>${esc(money(tDue))}</td><td>${esc(money(tPaid))}</td><td></td></tr></tfoot>`:'<tbody><tr><td>No months to show yet.</td></tr></tbody>';
+  // Kingdom Investment by type, this year
+  const by={}; let tot=0;
+  allTx().filter(t=>t.type==='expense'&&t.category==='kingdom'&&t.date>=`${y}-01-01`&&t.date<=`${y}-12-31`).forEach(t=>{const g=givingType(t);by[g]=(by[g]||0)+t.amount;tot+=t.amount;});
+  $('#gTypeLabel').textContent=String(y);
+  const list=Object.entries(by).sort((a,b)=>b[1]-a[1]);
+  $('#giveTypes').innerHTML=list.length?list.map(([g,v])=>{const p=Math.round(v/tot*100);return `<li><b>${esc(g)}</b><span><b>${esc(money(v))}</b> <span class="pct" style="color:var(--muted);font-size:12px">${p}%</span></span><span class="bar"><i style="width:${p}%;background:var(--c11)"></i></span></li>`;}).join('')+`<li style="border-top:1px solid var(--line);padding-top:10px"><b>All Kingdom Investment</b><b>${esc(money(tot))}</b></li>`
+    :'<li class="empty" style="display:block"><h3>No giving recorded this year</h3><div>Add an expense under Kingdom Investment and pick its giving type.</div></li>';
+}
+$('#payTitheBtn').addEventListener('click',()=>{const b=titheBalance();openTx(null,{type:'expense',category:'kingdom',giving:'Tithe',amount:b.bal>0.5?b.bal:'',note:'Tithe'});});
+$('#titheSetBtn').addEventListener('click',()=>{
+  const c=titheCfg(); $('#tPct').value=c.percent; $('#tStart').value=c.start; $('#tErr').textContent='';
+  $('#tCats').innerHTML=INC.map(([id,nm])=>`<label class="check"><input type="checkbox" value="${id}" ${c.exclude.includes(id)?'':'checked'}>${esc(nm)}</label>`).join('');
+  openSheet($('#titheOverlay'));
+});
+$('#titheForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const pct=parseFloat($('#tPct').value); const start=$('#tStart').value;
+  if(!(pct>0&&pct<=100)){$('#tErr').textContent='Enter a percentage between 1 and 100.';return;}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(start)){$('#tErr').textContent='Pick the date to start tracking from.';return;}
+  const exclude=$$('#tCats input').filter(i=>!i.checked).map(i=>i.value);
+  state.settings={...state.settings,tithe:{percent:pct,start,exclude}}; persistSettings();
+  closeSheet($('#titheOverlay')); render(); toast('Tithe settings saved');
+});
 
 const sorter=(a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.createdAt||0)-(a.createdAt||0);
 function txRow(t){
@@ -1096,7 +1300,7 @@ $('#budgetList').addEventListener('change',e=>{
 function go(view){
   state.view=view;
   $$('[data-view]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===view)));
-  ['overview','transactions','budgets'].forEach(v=>$('#view-'+v).hidden=v!==view);
+  ['overview','transactions','budgets','giving'].forEach(v=>$('#view-'+v).hidden=v!==view);
   try{localStorage.setItem('kobo-ledger-view',view)}catch(e){}
   window.scrollTo({top:0});
   render();
@@ -1126,6 +1330,13 @@ function drawCats(){
   $('#fCats').innerHTML=list.map(([id,n])=>`<button type="button" class="cat-opt" data-cat="${id}" aria-pressed="${id===fCat}">${icon(id)}<span>${esc(n)}</span></button>`).join('');
   $$('#fType button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.type===fType)));
   fillMethods(editing&&editing.type===fType&&editing.method?editing.method:undefined);
+  syncGivingField();
+}
+function syncGivingField(keep){
+  const show=fType==='expense'&&fCat==='kingdom';
+  $('#fGivingF').hidden=!show;
+  if(!$('#fGiving').options.length) $('#fGiving').innerHTML=GIVING_TYPES.map(g=>`<option>${esc(g)}</option>`).join('');
+  if(keep!==undefined) $('#fGiving').value=GIVING_TYPES.includes(keep)?keep:'Tithe';
 }
 function fillMethods(keep){
   const inc=fType==='income'; const opts=(inc?BANKS:METHODS).slice();
@@ -1136,22 +1347,22 @@ function fillMethods(keep){
   $('#fMethod').value=opts.includes(cur)?cur:opts[0];
 }
 $('#fType').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fType=b.dataset.type;drawCats();});
-$('#fCats').addEventListener('click',e=>{const b=e.target.closest('.cat-opt');if(!b)return;fCat=b.dataset.cat;$$('#fCats .cat-opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+$('#fCats').addEventListener('click',e=>{const b=e.target.closest('.cat-opt');if(!b)return;fCat=b.dataset.cat;$$('#fCats .cat-opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));syncGivingField();});
 $('#fAmount').addEventListener('input',e=>{
   const raw=e.target.value.replace(/[^0-9.]/g,''); const [i,...d]=raw.split('.');
   const dec=d.length?'.'+d.join('').slice(0,2):'';
   e.target.value=(i?Number(i).toLocaleString('en-US'):(dec?'0':''))+dec;
 });
-function openTx(t){
-  editing=t||null; delArmed=false;
+function openTx(t,preset){
+  editing=t||null; delArmed=false; preset=preset||{};
   $('#txTitle').textContent=t?'Edit transaction':'Add transaction';
   $('#fSave').textContent=t?'Save changes':'Save transaction';
   $('#fDelete').hidden=!t; $('#fDelete').classList.remove('armed'); $('#fDelete').textContent='Delete';
-  fType=t?t.type:(state.type==='income'?'income':'expense'); fCat=t?t.category:(fType==='income'?'salary':'food');
-  $('#fAmount').value=t?Number(t.amount).toLocaleString('en-US',{maximumFractionDigits:2}):'';
-  $('#fDate').value=t?t.date:today(); $('#fNote').value=t?(t.note||''):''; fillMethods(t?(t.method||''):'');
+  fType=t?t.type:(preset.type||(state.type==='income'?'income':'expense')); fCat=t?t.category:(preset.category||(fType==='income'?'salary':'food'));
+  $('#fAmount').value=t?Number(t.amount).toLocaleString('en-US',{maximumFractionDigits:2}):(preset.amount?Number(preset.amount).toLocaleString('en-US',{maximumFractionDigits:2}):'');
+  $('#fDate').value=t?t.date:today(); $('#fNote').value=t?(t.note||''):(preset.note||''); fillMethods(t?(t.method||''):'');
   $('#fErr').textContent='';
-  drawCats(); openSheet($('#txOverlay'));
+  drawCats(); syncGivingField(t?(t.giving||'Tithe'):(preset.giving||'Tithe')); openSheet($('#txOverlay'));
   setTimeout(()=>{ if(window.matchMedia('(min-width:721px)').matches) $('#fAmount').focus(); },60);
 }
 $('#addDesk').addEventListener('click',()=>openTx()); $('#addFab').addEventListener('click',()=>openTx());
@@ -1161,10 +1372,14 @@ $('#txForm').addEventListener('submit',e=>{
   if(!(amount>0)){$('#fErr').textContent='Enter an amount greater than zero.';$('#fAmount').focus();return;}
   const date=$('#fDate').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){$('#fErr').textContent='Pick a date for this transaction.';return;}
   const wasSample=showingSamples();
-  const tx={id:editing?editing.id:newId(),type:fType,category:fCat,amount:Math.round(amount*100)/100,date,note:$('#fNote').value.trim(),method:$('#fMethod').value,createdAt:editing?(editing.createdAt||Date.now()):Date.now()};
+  const tx={id:editing?editing.id:newId(),type:fType,category:fCat,amount:Math.round(amount*100)/100,date,note:$('#fNote').value.trim(),method:$('#fMethod').value,...(fType==='expense'&&fCat==='kingdom'?{giving:$('#fGiving').value}:{}),createdAt:editing?(editing.createdAt||Date.now()):Date.now()};
   if(editing) state.txs=state.txs.map(x=>x.id===tx.id?tx:x); else state.txs=[...state.txs,tx];
   persistTx(tx); closeSheet($('#txOverlay'));
-  toast(editing?'Changes saved':wasSample?'First entry added. Example data is now hidden.':(fType==='income'?'Income added':'Expense added'));
+  const titheOn=!editing&&tx.type==='income'&&titheCounts(tx);
+  if(titheOn){
+    const due=Math.round(tx.amount*titheCfg().percent)/100;
+    toast(`Income added. Tithe on this: ${money(due)}`,()=>openTx(null,{type:'expense',category:'kingdom',giving:'Tithe',amount:due,note:'Tithe on '+(tx.note||catOf(tx.category).name)}),'Record');
+  }else toast(editing?'Changes saved':wasSample?'First entry added. Example data is now hidden.':(fType==='income'?'Income added':'Expense added'));
   render();
 });
 $('#fDelete').addEventListener('click',()=>{
@@ -1177,6 +1392,7 @@ $('#fDelete').addEventListener('click',()=>{
 /* Settings */
 let wipeArmed=false;
 function openSettings(){
+  renderPinRow();
   $('#curSel').value=state.settings.currency;
   const real=state.txs.length>0;
   $('#samplesRow').hidden=real;
@@ -1205,7 +1421,7 @@ $('#wipeBtn').addEventListener('click',()=>{
 });
 $('#exportBtn').addEventListener('click',()=>{
   if(!state.txs.length){toast('There are no transactions to export yet.');return;}
-  const rows=[['Date','Type','Category','Amount','Currency','Paid with / into','Note']].concat([...state.txs].sort(sorter).map(t=>[t.date,t.type,catOf(t.category).name,t.amount,state.settings.currency,t.method||'',t.note||'']));
+  const rows=[['Date','Type','Category','Amount','Currency','Paid with / into','Giving type','Note']].concat([...state.txs].sort(sorter).map(t=>[t.date,t.type,catOf(t.category).name,t.amount,state.settings.currency,t.method||'',t.category==='kingdom'?(t.giving||'Tithe'):'',t.note||'']));
   const csv=rows.map(r=>r.map(v=>{const s=String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
   const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
   const a=document.createElement('a');a.href=url;a.download=`kobo-ledger-${today()}.csv`;document.body.appendChild(a);a.click();a.remove();
@@ -1214,19 +1430,112 @@ $('#exportBtn').addEventListener('click',()=>{
 
 /* Toast */
 let toastTimer=null,toastUndo=null;
-function toast(msg,undo){
-  $('#toastMsg').textContent=msg; toastUndo=undo||null; $('#toastAct').hidden=!undo;
+function toast(msg,undo,label){
+  $('#toastMsg').textContent=msg; toastUndo=undo||null; $('#toastAct').hidden=!undo; $('#toastAct').textContent=label||'Undo';
   $('#toast').classList.add('show'); clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),undo?6000:2800);
 }
 $('#toastAct').addEventListener('click',()=>{const u=toastUndo;toastUndo=null;$('#toast').classList.remove('show');if(u)u();});
 
+/* ---------- PIN lock (stored on this device only) ---------- */
+const PIN_KEY='kobo-ledger-pin', PIN_FAIL='kobo-ledger-pin-fails';
+let pinRec=lsGet(PIN_KEY), pinMode=null, pinEntry='', pinFirst='', hiddenAt=0, lockTimer=null;
+const canHash=!!(window.crypto&&crypto.subtle&&window.TextEncoder);
+const toB64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
+async function hashPin(pin,salt){
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(atob(salt),c=>c.charCodeAt(0)),iterations:150000,hash:'SHA-256'},key,256);
+  return toB64(bits);
+}
+function savePin(){try{pinRec?localStorage.setItem(PIN_KEY,JSON.stringify(pinRec)):localStorage.removeItem(PIN_KEY)}catch(e){}}
+function fails(){return lsGet(PIN_FAIL)||{n:0,until:0};}
+function setFails(f){try{localStorage.setItem(PIN_FAIL,JSON.stringify(f))}catch(e){}}
+function setInert(on){['main','.topbar','.bottomnav','.fab'].forEach(sel=>{const el=document.querySelector(sel);if(el){on?el.setAttribute('inert',''):el.removeAttribute('inert');}});}
+function showLock(mode){
+  pinMode=mode; pinEntry=''; drawDots();
+  const titles={unlock:'Enter your PIN',set1:'Choose a 4-digit PIN',set2:'Enter the PIN again',off:'Enter your PIN to turn it off',change:'Enter your current PIN'};
+  $('#lockTitle').textContent=titles[mode];
+  $('#lockMsg').className=''; $('#lockMsg').textContent=mode==='set1'?"You'll need it each time you open the app on this device.":'';
+  $('#lockAlt').textContent=mode==='unlock'?'Forgot?':'Cancel';
+  $('#lockReset').hidden=true; $('#keypad').hidden=false; $('#pinDots').hidden=false;
+  $('#lock').hidden=false; document.documentElement.classList.add('locked'); setInert(true);
+  $$('.overlay').forEach(ov=>{if(!ov.hidden){ov.classList.remove('show');ov.hidden=true;}}); document.body.style.overflow='';
+  checkCooldown();
+}
+function hideLock(){$('#lock').hidden=true;document.documentElement.classList.remove('locked');setInert(false);pinMode=null;clearInterval(lockTimer);}
+function drawDots(){$$('#pinDots i').forEach((d,i)=>d.classList.toggle('on',i<pinEntry.length));}
+function lockMsg(t,bad){$('#lockMsg').textContent=t;$('#lockMsg').className=bad?'bad':'';}
+function shake(){const d=$('#pinDots');d.classList.remove('shake');void d.offsetWidth;d.classList.add('shake');}
+function checkCooldown(){
+  clearInterval(lockTimer);
+  const tick=()=>{const f=fails(); const left=Math.ceil((f.until-Date.now())/1000);
+    const blocked=pinMode!=='set1'&&pinMode!=='set2'&&left>0;
+    $$('#keypad [data-k]').forEach(b=>b.disabled=blocked);
+    if(blocked) lockMsg(`Too many wrong attempts. Try again in ${left}s.`,true);
+    else{ if($('#lockMsg').textContent.startsWith('Too many')) lockMsg(''); clearInterval(lockTimer);} };
+  tick(); lockTimer=setInterval(tick,1000);
+}
+async function pinComplete(){
+  const pin=pinEntry;
+  if(pinMode==='set1'){pinFirst=pin;showLock('set2');return;}
+  if(pinMode==='set2'){
+    if(pin!==pinFirst){pinEntry='';drawDots();shake();showLock('set1');lockMsg("The PINs didn't match. Choose your PIN again.",true);return;}
+    const salt=toB64(crypto.getRandomValues(new Uint8Array(16)));
+    pinRec={salt,hash:await hashPin(pin,salt),after:pinRec?pinRec.after:60000}; savePin(); setFails({n:0,until:0});
+    hideLock(); toast('PIN lock is on'); return;
+  }
+  const ok=pinRec&&(await hashPin(pin,pinRec.salt))===pinRec.hash;
+  if(!ok){
+    const f=fails(); f.n++; if(f.n>=5) f.until=Date.now()+Math.min(300000,30000*Math.pow(2,f.n-5)); setFails(f);
+    pinEntry=''; drawDots(); shake(); lockMsg(f.n>=5?'':`Wrong PIN. ${Math.max(0,5-f.n)} attempt${5-f.n===1?'':'s'} left before a short wait.`,true); checkCooldown(); return;
+  }
+  setFails({n:0,until:0});
+  if(pinMode==='off'){pinRec=null;savePin();hideLock();toast('PIN lock is off');return;}
+  if(pinMode==='change'){showLock('set1');return;}
+  hideLock();
+}
+function pinKey(k){
+  if(!pinMode||$('#keypad').hidden) return;
+  if(k==='del'){pinEntry=pinEntry.slice(0,-1);drawDots();return;}
+  if(pinEntry.length>=4) return;
+  pinEntry+=k; drawDots(); if(pinEntry.length===4) setTimeout(pinComplete,120);
+}
+$('#keypad').addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b&&!b.disabled)pinKey(b.dataset.k);});
+document.addEventListener('keydown',e=>{if(!pinMode)return; if(/^[0-9]$/.test(e.key)){e.preventDefault();pinKey(e.key);} else if(e.key==='Backspace'){e.preventDefault();pinKey('del');}});
+$('#lockAlt').addEventListener('click',()=>{
+  if(pinMode!=='unlock'){hideLock();return;}
+  $('#lockResetText').textContent=gh?'This removes the PIN, the GitHub connection and the copy of your entries on this device. Your entries stay safe in GitHub. Reconnect with your access token to load them again.':'This removes the PIN and deletes every entry saved on this device. This device is not connected to GitHub, so these entries cannot be recovered.';
+  $('#keypad').hidden=true; $('#pinDots').hidden=true; $('#lockReset').hidden=false; lockMsg('');
+});
+$('#lockResetNo').addEventListener('click',()=>showLock('unlock'));
+$('#lockResetYes').addEventListener('click',()=>{
+  try{Object.keys(localStorage).filter(k=>k.startsWith('kobo-ledger')).forEach(k=>localStorage.removeItem(k));}catch(e){}
+  location.reload();
+});
+document.addEventListener('visibilitychange',()=>{
+  if(!pinRec) return;
+  if(document.visibilityState==='hidden'){hiddenAt=Date.now();return;}
+  const after=Number(pinRec.after); if(after<0||pinMode) return;
+  if(hiddenAt&&Date.now()-hiddenAt>=after) showLock('unlock');
+});
+function renderPinRow(){
+  $('#pinRow').hidden=false;
+  if(!canHash){$('#pinText').textContent='Not available in this browser.';$('#pinBtn').hidden=true;$('#pinOffBtn').hidden=true;$('#pinAfterRow').hidden=true;return;}
+  $('#pinText').textContent=pinRec?'On for this device. Your PIN is needed to open the app.':'Ask for a 4-digit PIN when the app opens on this device.';
+  $('#pinBtn').textContent=pinRec?'Change PIN':'Set PIN'; $('#pinOffBtn').hidden=!pinRec; $('#pinAfterRow').hidden=!pinRec;
+  if(pinRec) $('#pinAfter').value=String(pinRec.after??60000);
+}
+$('#pinBtn').addEventListener('click',()=>{closeSheet($('#setOverlay'));setTimeout(()=>showLock(pinRec?'change':'set1'),200);});
+$('#pinOffBtn').addEventListener('click',()=>{closeSheet($('#setOverlay'));setTimeout(()=>showLock('off'),200);});
+$('#pinAfter').addEventListener('change',e=>{if(pinRec){pinRec.after=Number(e.target.value);savePin();toast('Auto-lock updated');}});
+
 /* Resize */
 let rz=null; window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{if(state.view==='overview')renderFlow();},120);});
 
 /* ---------- Boot ---------- */
+if(pinRec&&canHash) showLock('unlock'); else document.documentElement.classList.remove('locked');
 fillCatSel();
-try{const v=localStorage.getItem('kobo-ledger-view');if(v&&['overview','transactions','budgets'].includes(v))state.view=v;}catch(e){}
+try{const v=localStorage.getItem('kobo-ledger-view');if(v&&['overview','transactions','budgets','giving'].includes(v))state.view=v;}catch(e){}
 go(state.view);
 
 if(sb){
