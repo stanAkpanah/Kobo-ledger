@@ -781,7 +781,8 @@ function makeSamples(){
 const SAMPLES=makeSamples();
 
 /* ---------- State ---------- */
-const DEFAULT_SETTINGS={tithe:{percent:10,start:new Date().getFullYear()+'-01-01',exclude:[]},currency:'NGN',budgets:{food:150000,transport:50000,housing:180000,bills:35000,airtime:15000,fun:25000},hideSamples:false};
+const TITHE_START='2026-10-01'; // tithe tracking begins this month
+const DEFAULT_SETTINGS={tithe:{percent:10,start:TITHE_START,exclude:[],v:2},currency:'NGN',budgets:{food:150000,transport:50000,housing:180000,bills:35000,airtime:15000,fun:25000},hideSamples:false};
 const state={txs:[],settings:{...DEFAULT_SETTINGS,budgets:{...DEFAULT_SETTINGS.budgets}},sync:'local',period:'month',view:'overview',q:'',type:'all',cat:'all',activeMonth:5};
 
 const sb=(SUPABASE_URL&&SUPABASE_ANON_KEY&&window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY):null;
@@ -1165,7 +1166,12 @@ function renderCatTotals(list,total,label){
 $('#catTotals').addEventListener('click',e=>{const tr=e.target.closest('tbody tr');if(!tr)return;state.cat=tr.dataset.cat;state.type='all';$$('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.t==='all')));$('#catSel').value=state.cat;go('transactions');});
 
 /* ---------- Tithe & giving ---------- */
-function titheCfg(){const t=state.settings.tithe||{};return{percent:Number(t.percent)>0?Number(t.percent):10,start:t.start||DEFAULT_SETTINGS.tithe.start,exclude:Array.isArray(t.exclude)?t.exclude:[]};}
+function titheCfg(){
+  const t=state.settings.tithe||{};
+  // Settings saved before this update used 1 January as the start; move those to the new start date.
+  const start=t.v?(t.start||TITHE_START):(!t.start||t.start==='2026-01-01'?TITHE_START:t.start);
+  return{percent:Number(t.percent)>0?Number(t.percent):10,start,exclude:Array.isArray(t.exclude)?t.exclude:[]};
+}
 const givingType=t=>t.giving||'Tithe';
 function titheCounts(t){const c=titheCfg();return t.type==='income'&&!c.exclude.includes(t.category)&&t.date>=c.start;}
 const isTithePaid=t=>t.type==='expense'&&t.category==='kingdom'&&givingType(t)==='Tithe';
@@ -1232,7 +1238,7 @@ $('#titheForm').addEventListener('submit',e=>{
   if(!(pct>0&&pct<=100)){$('#tErr').textContent='Enter a percentage between 1 and 100.';return;}
   if(!/^\d{4}-\d{2}-\d{2}$/.test(start)){$('#tErr').textContent='Pick the date to start tracking from.';return;}
   const exclude=$$('#tCats input').filter(i=>!i.checked).map(i=>i.value);
-  state.settings={...state.settings,tithe:{percent:pct,start,exclude}}; persistSettings();
+  state.settings={...state.settings,tithe:{percent:pct,start,exclude,v:2}}; persistSettings();
   closeSheet($('#titheOverlay')); render(); toast('Tithe settings saved');
 });
 
