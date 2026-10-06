@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Kobo Ledger: track your income, expenses and monthly budgets.">
 <meta name="theme-color" content="#123B33">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kobo Ledger">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23123B33'/%3E%3Cpath d='M7 22l6-6 5 4 8-10M20 10h6v6' fill='none' stroke='%237FE0BE' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>Kobo Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -668,6 +674,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
           <option value="NGN">₦ Naira</option><option value="USD">$ US Dollar</option><option value="GBP">£ Pound</option><option value="EUR">€ Euro</option><option value="GHS">₵ Cedi</option><option value="KES">KSh Shilling</option><option value="ZAR">R Rand</option>
         </select>
       </div>
+      <div class="set-row" id="installRow" hidden><div><b>Install the app</b><p id="installText"></p></div><button class="btn btn-primary" id="installBtn" hidden>Install</button></div>
       <div class="set-row" id="exportRow"><div><b>Export to CSV</b><p>Download every transaction as a spreadsheet file.</p></div><button class="btn btn-ghost" id="exportBtn">Export</button></div>
       <div class="set-row" id="samplesRow"><div><b>Example data</b><p id="samplesText"></p></div><button class="btn btn-ghost" id="toggleSamples">Hide</button></div>
       <div class="set-row"><div><b>Delete all transactions</b><p>Removes your entries and budgets. This can't be undone.</p></div><button class="btn btn-danger" id="wipeBtn">Delete all</button></div>
@@ -1497,7 +1504,26 @@ $('#fDelete').addEventListener('click',()=>{
 
 /* Settings */
 let wipeArmed=false;
+/* ---------- Installable app ---------- */
+let installEvt=null;
+const isStandalone=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;renderInstallRow();});
+window.addEventListener('appinstalled',()=>{installEvt=null;renderInstallRow();toast('Kobo Ledger is installed');});
+function renderInstallRow(){
+  const row=$('#installRow'); if(!row) return;
+  if(isStandalone()){row.hidden=true;return;}
+  if(installEvt){row.hidden=false;$('#installText').textContent='Add Kobo Ledger to your home screen. It opens full screen like a normal app.';$('#installBtn').hidden=false;return;}
+  if(isIOS){row.hidden=false;$('#installBtn').hidden=true;$('#installText').textContent='In Safari, tap the Share button, then "Add to Home Screen".';return;}
+  row.hidden=false;$('#installBtn').hidden=true;$('#installText').textContent='Open your browser menu and choose "Install app" or "Add to Home screen".';
+}
+$('#installBtn').addEventListener('click',async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;renderInstallRow();});
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});
+}
+
 function openSettings(){
+  renderInstallRow();
   $('#openSym').textContent=SYM[state.settings.currency]||'';
   $('#openBal').value=state.settings.opening?Number(state.settings.opening).toLocaleString('en-US',{maximumFractionDigits:2}):'';
   renderPinRow();
