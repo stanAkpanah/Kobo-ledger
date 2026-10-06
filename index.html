@@ -165,6 +165,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
 .tx .s{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx .a{font-weight:700;font-size:15px;text-align:right;white-space:nowrap}
 .tx .a.inc{color:var(--income)}
+.tx .a.xfer{color:var(--ink-2)}
 .tx .a small{display:block;font-size:11.5px;color:var(--muted);font-weight:600}
 .tx .body{min-width:0}
 .day{display:flex;justify-content:space-between;align-items:center;padding:14px 8px 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
@@ -223,6 +224,19 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
   .bal-op{font-size:18px}
   .bal-top .linkbtn{font-size:13px}
 }
+
+/* Accounts */
+.acct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.acct{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 14px;text-align:left;display:grid;gap:2px;min-width:0;cursor:pointer}
+.acct:hover{border-color:var(--line-strong)}
+.acct .nm{font-size:12.5px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px}
+.acct .nm i{width:8px;height:8px;border-radius:50%;flex:none}
+.acct b{font-size:17px;overflow-wrap:anywhere}
+.acct small{font-size:11.5px;color:var(--muted)}
+.acct.none{border-style:dashed}
+.acct-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px}
+.acct-foot b{font-size:16px}
+@media (max-width:720px){.acct-grid{grid-template-columns:1fr 1fr}}
 
 /* Giving */
 .tithe-strip{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
@@ -313,10 +327,11 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
 .amount-field:focus-within{border-color:var(--accent);background:var(--surface)}
 .amount-field span{font-family:var(--display);font-size:28px;font-weight:700;color:var(--muted)}
 .amount-field input{border:0;background:transparent;font-family:var(--display);font-size:32px;font-weight:700;width:100%;padding:4px 0;outline:none;min-width:0}
-.type-toggle{display:grid;grid-template-columns:1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.type-toggle{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
 .type-toggle button{border:0;background:transparent;border-radius:10px;padding:10px;font-weight:700;color:var(--muted)}
 .type-toggle button[aria-pressed="true"][data-type="expense"]{background:var(--expense-soft);color:var(--expense)}
 .type-toggle button[aria-pressed="true"][data-type="income"]{background:var(--income-soft);color:var(--income)}
+.type-toggle button[aria-pressed="true"][data-type="transfer"]{background:var(--accent-soft);color:var(--accent)}
 .cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}
 .cat-opt{border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 6px;display:grid;justify-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink-2);text-align:center;line-height:1.2}
 .cat-opt .ico{width:32px;height:32px;border-radius:10px}
@@ -479,6 +494,12 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       </div>
     </div>
 
+    <div class="card" id="acctCard">
+      <div class="card-head"><h3>Accounts</h3><div class="head-actions"><button class="btn btn-ghost" id="moveMoney"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h13l-3-3M20 16H7l3 3"/></svg>Move money</button></div></div>
+      <div class="acct-grid num" id="acctGrid"></div>
+      <div class="acct-foot" id="acctFoot"></div>
+    </div>
+
     <div class="card tithe-strip" id="titheStrip">
       <span id="tsIcon"></span>
       <div class="txt"><b class="num" id="tsMain">—</b><span id="tsSub"></span></div>
@@ -526,9 +547,10 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
     <div class="toolbar">
       <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search notes or categories" aria-label="Search transactions"></label>
       <div class="seg" id="typeSeg" role="group" aria-label="Type">
-        <button data-t="all" aria-pressed="true">All</button><button data-t="income" aria-pressed="false">Income</button><button data-t="expense" aria-pressed="false">Expenses</button>
+        <button data-t="all" aria-pressed="true">All</button><button data-t="income" aria-pressed="false">Income</button><button data-t="expense" aria-pressed="false">Expenses</button><button data-t="transfer" aria-pressed="false">Transfers</button>
       </div>
       <select class="pill" id="catSel" aria-label="Category"></select>
+      <select class="pill" id="acctSel" aria-label="Account"></select>
     </div>
     <div class="summary-strip">
       <div class="mini"><div class="label">Money in</div><div class="v num inc" id="sIn">—</div></div>
@@ -610,18 +632,23 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       <div class="type-toggle" id="fType">
         <button type="button" data-type="expense" aria-pressed="true">Expense</button>
         <button type="button" data-type="income" aria-pressed="false">Income</button>
+        <button type="button" data-type="transfer" aria-pressed="false">Transfer</button>
       </div>
       <div class="field">
         <label for="fAmount">Amount</label>
         <div class="amount-field"><span id="fCur">₦</span><input id="fAmount" inputmode="decimal" autocomplete="off" placeholder="0"></div>
       </div>
-      <div class="field">
+      <div class="field" id="fCatsF">
         <span class="label">Category</span>
         <div class="cats" id="fCats"></div>
       </div>
+      <div class="row2" id="fXferF" hidden>
+        <div class="field"><label for="fFrom">From</label><select id="fFrom"></select></div>
+        <div class="field"><label for="fTo">To</label><select id="fTo"></select></div>
+      </div>
       <div class="row2">
         <div class="field"><label for="fDate">Date</label><input id="fDate" type="date"></div>
-        <div class="field"><label for="fMethod" id="fMethodLabel">Paid with</label>
+        <div class="field" id="fMethodF"><label for="fMethod" id="fMethodLabel">Paid from</label>
           <select id="fMethod"><option>Bank transfer</option><option>Card</option><option>Cash</option><option>POS</option><option>USSD</option><option>Mobile wallet</option></select>
         </div>
       </div>
@@ -666,9 +693,7 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
       <div class="set-row" id="pinAfterRow" hidden><div><b>Lock automatically</b><p>When you leave the app and come back.</p></div>
         <select class="pill" id="pinAfter" aria-label="Lock automatically"><option value="0">Immediately</option><option value="60000">After 1 minute</option><option value="300000">After 5 minutes</option><option value="-1">Only when the app opens</option></select>
       </div>
-      <div class="set-row"><div><b>Opening balance</b><p>Money you already had before your first entry. It starts your running balance.</p></div>
-        <label class="money-in" style="width:150px"><span id="openSym">₦</span><input class="num" id="openBal" inputmode="decimal" placeholder="0" aria-label="Opening balance"></label>
-      </div>
+      <div class="set-row"><div><b>Starting balances</b><p id="openText">What each account held before your first entry.</p></div><button class="btn btn-ghost" id="openBtn">Edit</button></div>
       <div class="set-row"><div><b>Currency</b><p>Used for every amount in the app.</p></div>
         <select class="pill" id="curSel" aria-label="Currency">
           <option value="NGN">₦ Naira</option><option value="USD">$ US Dollar</option><option value="GBP">£ Pound</option><option value="EUR">€ Euro</option><option value="GHS">₵ Cedi</option><option value="KES">KSh Shilling</option><option value="ZAR">R Rand</option>
@@ -700,6 +725,19 @@ select.pill,.pill-select{appearance:none;-webkit-appearance:none;border:1px soli
         <button type="button" class="linkbtn" id="authSwitch">Create an account</button>
         <button type="button" class="linkbtn" id="authForgot">Forgot password?</button>
       </div>
+    </form>
+  </div>
+</div>
+
+<!-- Starting balances -->
+<div class="overlay" id="openOverlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="openTitle">
+    <div class="sheet-head"><h3 id="openTitle">Starting balances</h3><button class="iconbtn" data-close aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <form class="sheet-body" id="openForm" novalidate>
+      <p class="gh-help">Enter what was in each account <b>before your first entry in Kobo Ledger</b>. Leave an account empty if it started at zero. Your account balances and running balance both start from these amounts.</p>
+      <div id="openList" style="display:grid;gap:10px"></div>
+      <div class="err" id="openErr"></div>
+      <div class="sheet-foot"><button type="submit" class="btn btn-primary">Save starting balances</button></div>
     </form>
   </div>
 </div>
@@ -776,16 +814,19 @@ const ICONS={
  freelance:'<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>',
  investment:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
  gift_in:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13"/><path d="M12 8C10 4 6 5 7.5 8M12 8c2-4 6-3 4.5 0"/>',
+ transfer:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
  other_inc:'<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>'
 };
 const EXP=[['food','Food & Groceries'],['transport','Transport'],['housing','Rent & Housing'],['bills','Bills & Utilities'],['airtime','Airtime & Data'],['health','Health'],['shopping','Shopping'],['fun','Entertainment'],['education','Education'],['family','Family & Gifts'],['kingdom','Kingdom Investment'],['electricity','Electricity'],['other_exp','Other']];
 const BANKS=['First Bank','Access Bank','GTBank','FCMB','Moniepoint','Opay'];
+const ACCOUNTS=[...BANKS,'Cash'];
 const METHODS=['Bank transfer','Card','Cash','POS','USSD','Mobile wallet'];
 const GIVING_TYPES=['Tithe','Offering','Seed','Thanksgiving','First fruit','Pledge','Building fund','Other giving'];
 const INC=[['salary','Salary'],['business','Business'],['freelance','Freelance'],['investment','Investments'],['gift_in','Gifts received'],['other_inc','Other income']];
 const CAT={};
 EXP.forEach(([id,name],i)=>CAT[id]={id,name,type:'expense',color:id==='other_exp'?'var(--c-other)':`var(--c${i+1})`});
 INC.forEach(([id,name],i)=>CAT[id]={id,name,type:'income',color:id==='other_inc'?'var(--c-other)':`var(--c${[1,4,3,8,7][i]})`});
+CAT.transfer={id:'transfer',name:'Transfer',type:'transfer',color:'var(--c3)'};
 const catOf=id=>CAT[id]||CAT.other_exp;
 const icon=(id,size)=>`<span class="ico" style="background:color-mix(in srgb,${catOf(id).color} 15%,transparent);color:${catOf(id).color}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[id]||ICONS.other_exp}</svg></span>`;
 
@@ -1138,7 +1179,7 @@ function prevRange(p){
   return null;
 }
 const inRange=(t,[a,b])=>t.date>=a&&t.date<=b;
-function totals(list){let inc=0,exp=0;for(const t of list){if(t.type==='income')inc+=t.amount;else exp+=t.amount;}return{inc,exp,net:inc-exp};}
+function totals(list){let inc=0,exp=0;for(const t of list){if(t.type==='income')inc+=t.amount;else if(t.type==='expense')exp+=t.amount;}return{inc,exp,net:inc-exp};}
 
 /* ---------- Render ---------- */
 function render(){
@@ -1169,11 +1210,11 @@ function renderOverview(){
   if(pr){const p=totals(allTx().filter(t=>inRange(t,pr)));
     const delta=(c,o)=>o?`${c>=o?'▲':'▼'} ${Math.abs(Math.round((c-o)/o*100))}% vs ${state.period==='month'?'same point last month':'month before'}`:'No earlier data';
     $('#hIncD').textContent=delta(inc,p.inc); $('#hExpD').textContent=delta(exp,p.exp);
-  } else {const c=list.filter(t=>t.type==='income').length,e=list.length-c;$('#hIncD').textContent=`${c} entr${c===1?'y':'ies'}`;$('#hExpD').textContent=`${e} entr${e===1?'y':'ies'}`;}
+  } else {const c=list.filter(t=>t.type==='income').length,e=list.filter(t=>t.type==='expense').length;$('#hIncD').textContent=`${c} entr${c===1?'y':'ies'}`;$('#hExpD').textContent=`${e} entr${e===1?'y':'ies'}`;}
   const rate=inc>0?Math.round(net/inc*100):null;
   $('#hRate').textContent=rate===null?'—':rate+'%';
   $('#hRateBar').style.width=Math.max(0,Math.min(100,rate||0))+'%';
-  renderBalance(); renderTitheStrip(); renderFlow(); renderCats(list.filter(t=>t.type==='expense'),exp); renderCatTotals(list.filter(t=>t.type==='expense'),exp,range[2]);
+  renderBalance(); renderAccounts(); renderTitheStrip(); renderFlow(); renderCats(list.filter(t=>t.type==='expense'),exp); renderCatTotals(list.filter(t=>t.type==='expense'),exp,range[2]);
   const recent=[...allTx()].sort(sorter).slice(0,6);
   $('#recent').innerHTML=recent.length?recent.map(txRow).join(''):emptyHTML('No transactions yet','Add your income and expenses to see them here.');
 }
@@ -1248,8 +1289,31 @@ function titheTotals(from,to){
 }
 function titheBalance(){const c=titheCfg();const r=titheTotals(c.start,'9999-12-31');return{...r,bal:r.due-r.paid};}
 const prettyLong=s=>parseISO(s).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+function openingTotal(){const ac=state.settings.accounts||{};return (Number(state.settings.opening)||0)+Object.values(ac).reduce((s,v)=>s+(Number(v)||0),0);}
+function accountBalances(){
+  const ac=state.settings.accounts||{}; const bal={}; ACCOUNTS.forEach(a=>bal[a]=Number(ac[a])||0);
+  let none=Number(state.settings.opening)||0, noneCount=0;
+  for(const t of allTx()){
+    if(t.type==='transfer'){ if(t.from in bal) bal[t.from]-=t.amount; else none-=t.amount; if(t.to in bal) bal[t.to]+=t.amount; else none+=t.amount; continue; }
+    const sign=t.type==='income'?1:-1;
+    if(ACCOUNTS.includes(t.method)) bal[t.method]+=sign*t.amount; else {none+=sign*t.amount; noneCount++;}
+  }
+  return {bal,none,noneCount};
+}
+function renderAccounts(){
+  const {bal,none,noneCount}=accountBalances(); const used=new Set(); const ac=state.settings.accounts||{};
+  allTx().forEach(t=>{if(t.type==='transfer'){used.add(t.from);used.add(t.to);}else used.add(t.method);});
+  const show=ACCOUNTS.filter(a=>used.has(a)||Number(ac[a])||Math.abs(bal[a])>0.5);
+  const list=show.length?show:ACCOUNTS;
+  const dot=a=>`var(--c${(ACCOUNTS.indexOf(a)%10)+1})`;
+  let html=list.map(a=>`<button class="acct" data-acct="${esc(a)}" title="See ${esc(a)} transactions"><span class="nm"><i style="background:${dot(a)}"></i>${esc(a)}</span><b class="${bal[a]<-0.5?'neg':''}">${esc(money(bal[a]))}</b>${bal[a]<-0.5?'<small>Below zero: an entry may be missing</small>':''}</button>`).join('');
+  if(noneCount||Math.abs(none)>0.5) html+=`<button class="acct none" data-acct="__none" title="Entries without an account"><span class="nm"><i style="background:var(--c-other)"></i>No account</span><b class="${none<-0.5?'neg':''}">${esc(money(none))}</b><small>${noneCount} older entr${noneCount===1?'y':'ies'}. Edit them to pick an account.</small></button>`;
+  $('#acctGrid').innerHTML=html;
+  const total=Object.values(bal).reduce((s,v)=>s+v,0)+none;
+  $('#acctFoot').innerHTML=`<span>Total across all accounts</span><b class="num ${total<-0.5?'neg':''}">${esc(money(total))}</b>`;
+}
 function renderBalance(){
-  const opening=Number(state.settings.opening)||0;
+  const opening=openingTotal();
   const p=state.period; const [a,b]=periodRange(p); const all=allTx();
   const n=new Date(); const curMonth=monthName(n,'long');
   const periodName={month:curMonth,last:monthName(new Date(n.getFullYear(),n.getMonth()-1,1),'long'),'3m':'Last 3 months',year:String(n.getFullYear()),all:'All time'}[p];
@@ -1260,15 +1324,15 @@ function renderBalance(){
   const startDay=prettyLong(a);
   $('#bPrevLbl').textContent=p==='all'?'Opening balance':'Brought forward';
   $('#bPrev').textContent=sign(carry); cls($('#bPrev'),carry);
-  $('#bPrevSub').textContent=p==='all'?'Before your first entry':`Net of everything before ${startDay}${opening?' incl. opening balance':''}`;
+  $('#bPrevSub').textContent=p==='all'?'Before your first entry':`Net of everything before ${startDay}${opening?' incl. starting balances':''}`;
   $('#bCurLbl').textContent=`${periodName} net`;
   $('#bCur').textContent=sign(during.net); cls($('#bCur'),during.net);
   $('#bCurSub').textContent=`${money(during.inc)} in, ${money(during.exp)} out`;
   $('#bNow').textContent=sign(now); cls($('#bNow'),now);
   $('#bNowSub').textContent=p==='month'||p==='3m'||p==='year'||p==='all'?'Carried into next month':`At the end of ${periodName}`;
   $('#bClose').textContent=sign(now); cls($('#bClose'),now);
-  $('#bCloseSub').textContent=carry?`${sign(carry)} brought forward ${during.net>=0?'plus':'minus'} ${money(Math.abs(during.net))} ${periodName==='All time'?'net':periodName+' net'}`:'Add an opening balance if you had money before your first entry';
-  $('#setOpening').textContent=opening?'Edit opening balance':'Set opening balance';
+  $('#bCloseSub').textContent=carry?`${sign(carry)} brought forward ${during.net>=0?'plus':'minus'} ${money(Math.abs(during.net))} ${periodName==='All time'?'net':periodName+' net'}`:'Add starting balances if you had money before your first entry';
+  $('#setOpening').textContent=opening?'Edit starting balances':'Set starting balances';
 }
 function renderTitheStrip(){
   const b=titheBalance(); const c=titheCfg();
@@ -1351,6 +1415,7 @@ $('#titheForm').addEventListener('submit',e=>{
 
 const sorter=(a,b)=>a.date<b.date?1:a.date>b.date?-1:(b.createdAt||0)-(a.createdAt||0);
 function txRow(t){
+  if(t.type==='transfer') return `<li><button class="tx" data-id="${esc(t.id)}">${icon('transfer')}<span class="body"><div class="t">${esc(t.note||'Transfer')}</div><div class="s">${esc(t.from)} → ${esc(t.to)} · ${esc(prettyDay(t.date))}</div></span><span class="a num xfer">${esc(money(t.amount))}<small>moved</small></span></button></li>`;
   const c=catOf(t.category); const inc=t.type==='income';
   return `<li><button class="tx" data-id="${esc(t.id)}">${icon(t.category)}<span class="body"><div class="t">${esc(t.note||c.name)}</div><div class="s">${esc(c.name)} · ${esc(prettyDay(t.date))}${t.method?' · '+esc(t.method):''}</div></span><span class="a num ${inc?'inc':''}">${inc?'+':'−'}${esc(money(t.amount))}</span></button></li>`;
 }
@@ -1361,7 +1426,8 @@ function renderTransactions(){
   let list=allTx().filter(t=>inRange(t,range));
   if(state.type!=='all') list=list.filter(t=>t.type===state.type);
   if(state.cat!=='all') list=list.filter(t=>t.category===state.cat);
-  if(q) list=list.filter(t=>(t.note||'').toLowerCase().includes(q)||catOf(t.category).name.toLowerCase().includes(q)||(t.method||'').toLowerCase().includes(q)||String(t.amount).includes(q));
+  if(state.acct&&state.acct!=='all') list=list.filter(t=>t.type==='transfer'?(t.from===state.acct||t.to===state.acct):state.acct==='__none'?!ACCOUNTS.includes(t.method):t.method===state.acct);
+  if(q) list=list.filter(t=>(t.note||'').toLowerCase().includes(q)||catOf(t.category).name.toLowerCase().includes(q)||(t.method||'').toLowerCase().includes(q)||(t.from||'').toLowerCase().includes(q)||(t.to||'').toLowerCase().includes(q)||String(t.amount).includes(q));
   list.sort(sorter);
   const {inc,exp,net}=totals(list);
   $('#sIn').textContent=money(inc);$('#sOut').textContent=money(exp);$('#sNet').textContent=money(net,{sign:true});
@@ -1427,6 +1493,8 @@ document.addEventListener('click',e=>{
 ['#periodSel','#periodSel2'].forEach(s=>$(s).addEventListener('change',e=>{state.period=e.target.value;render();}));
 $('#q').addEventListener('input',e=>{state.q=e.target.value;renderTransactions();});
 $('#catSel').addEventListener('change',e=>{state.cat=e.target.value;renderTransactions();});
+$('#acctSel').innerHTML='<option value="all">All accounts</option>'+ACCOUNTS.map(a=>`<option>${esc(a)}</option>`).join('')+'<option value="__none">No account</option>';
+$('#acctSel').addEventListener('change',e=>{state.acct=e.target.value;renderTransactions();});
 $('#typeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;state.type=b.dataset.t;$$('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));renderTransactions();});
 
 /* ---------- Sheets ---------- */
@@ -1438,6 +1506,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')$$('.overlay').forEa
 
 let editing=null, fType='expense', fCat='food', delArmed=false;
 function drawCats(){
+  const xfer=fType==='transfer';
+  $('#fCatsF').hidden=xfer; $('#fXferF').hidden=!xfer; $('#fMethodF').hidden=xfer;
+  if(xfer){ $$('#fType button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.type===fType))); fillXfer(); syncGivingField(); return; }
   const list=fType==='expense'?EXP:INC;
   if(!list.some(([id])=>id===fCat)) fCat=list[0][0];
   $('#fCats').innerHTML=list.map(([id,n])=>`<button type="button" class="cat-opt" data-cat="${id}" aria-pressed="${id===fCat}">${icon(id)}<span>${esc(n)}</span></button>`).join('');
@@ -1446,20 +1517,29 @@ function drawCats(){
   syncGivingField();
 }
 function syncGivingField(keep){
-  const show=fType==='expense'&&fCat==='kingdom';
+  const show=fType==='expense'&&fCat==='kingdom'&&!$('#fCatsF').hidden;
   $('#fGivingF').hidden=!show;
   if(!$('#fGiving').options.length) $('#fGiving').innerHTML=GIVING_TYPES.map(g=>`<option>${esc(g)}</option>`).join('');
   if(keep!==undefined) $('#fGiving').value=GIVING_TYPES.includes(keep)?keep:'Tithe';
 }
+function fillXfer(){
+  const opt=ACCOUNTS.map(a=>`<option>${esc(a)}</option>`).join('');
+  const f=$('#fFrom').value, t=$('#fTo').value;
+  $('#fFrom').innerHTML=opt; $('#fTo').innerHTML=opt;
+  const e=editing&&editing.type==='transfer'?editing:null;
+  $('#fFrom').value=e?e.from:(f||'GTBank'); $('#fTo').value=e?e.to:(t&&t!==$('#fFrom').value?t:'Opay');
+  if($('#fTo').value===$('#fFrom').value) $('#fTo').value=ACCOUNTS.find(a=>a!==$('#fFrom').value);
+}
 function fillMethods(keep){
-  const inc=fType==='income'; const opts=(inc?BANKS:METHODS).slice();
+  const inc=fType==='income'; const opts=ACCOUNTS.slice();
   const cur=keep!==undefined?keep:$('#fMethod').value;
   if(keep&&!opts.includes(keep)) opts.push(keep); // keep older values when editing
-  $('#fMethodLabel').textContent=inc?'Paid into':'Paid with';
+  $('#fMethodLabel').textContent=inc?'Paid into':'Paid from';
   $('#fMethod').innerHTML=opts.map(o=>`<option>${esc(o)}</option>`).join('');
   $('#fMethod').value=opts.includes(cur)?cur:opts[0];
 }
 $('#fType').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;fType=b.dataset.type;drawCats();});
+$('#fFrom').addEventListener('change',()=>{if($('#fTo').value===$('#fFrom').value)$('#fTo').value=ACCOUNTS.find(a=>a!==$('#fFrom').value);});
 $('#fCats').addEventListener('click',e=>{const b=e.target.closest('.cat-opt');if(!b)return;fCat=b.dataset.cat;$$('#fCats .cat-opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));syncGivingField();});
 $('#fAmount').addEventListener('input',e=>{
   const raw=e.target.value.replace(/[^0-9.]/g,''); const [i,...d]=raw.split('.');
@@ -1471,7 +1551,7 @@ function openTx(t,preset){
   $('#txTitle').textContent=t?'Edit transaction':'Add transaction';
   $('#fSave').textContent=t?'Save changes':'Save transaction';
   $('#fDelete').hidden=!t; $('#fDelete').classList.remove('armed'); $('#fDelete').textContent='Delete';
-  fType=t?t.type:(preset.type||(state.type==='income'?'income':'expense')); fCat=t?t.category:(preset.category||(fType==='income'?'salary':'food'));
+  fType=t?t.type:(preset.type||(state.type==='income'?'income':state.type==='transfer'?'transfer':'expense')); fCat=t?t.category:(preset.category||(fType==='income'?'salary':'food'));
   $('#fAmount').value=t?Number(t.amount).toLocaleString('en-US',{maximumFractionDigits:2}):(preset.amount?Number(preset.amount).toLocaleString('en-US',{maximumFractionDigits:2}):'');
   $('#fDate').value=t?t.date:today(); $('#fNote').value=t?(t.note||''):(preset.note||''); fillMethods(t?(t.method||''):'');
   $('#fErr').textContent='';
@@ -1485,14 +1565,17 @@ $('#txForm').addEventListener('submit',e=>{
   if(!(amount>0)){$('#fErr').textContent='Enter an amount greater than zero.';$('#fAmount').focus();return;}
   const date=$('#fDate').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){$('#fErr').textContent='Pick a date for this transaction.';return;}
   const wasSample=showingSamples();
-  const tx={id:editing?editing.id:newId(),type:fType,category:fCat,amount:Math.round(amount*100)/100,date,note:$('#fNote').value.trim(),method:$('#fMethod').value,...(fType==='expense'&&fCat==='kingdom'?{giving:$('#fGiving').value}:{}),createdAt:editing?(editing.createdAt||Date.now()):Date.now()};
+  if(fType==='transfer'&&$('#fFrom').value===$('#fTo').value){$('#fErr').textContent='Pick two different accounts to move money between.';return;}
+  const tx=fType==='transfer'
+   ?{id:editing?editing.id:newId(),type:'transfer',category:'transfer',amount:Math.round(amount*100)/100,date,note:$('#fNote').value.trim(),from:$('#fFrom').value,to:$('#fTo').value,createdAt:editing?(editing.createdAt||Date.now()):Date.now()}
+   :{id:editing?editing.id:newId(),type:fType,category:fCat,amount:Math.round(amount*100)/100,date,note:$('#fNote').value.trim(),method:$('#fMethod').value,...(fType==='expense'&&fCat==='kingdom'?{giving:$('#fGiving').value}:{}),createdAt:editing?(editing.createdAt||Date.now()):Date.now()};
   if(editing) state.txs=state.txs.map(x=>x.id===tx.id?tx:x); else state.txs=[...state.txs,tx];
   persistTx(tx); closeSheet($('#txOverlay'));
   const titheOn=!editing&&tx.type==='income'&&titheCounts(tx);
   if(titheOn){
     const due=Math.round(tx.amount*titheCfg().percent)/100;
     toast(`Income added. Tithe on this: ${money(due)}`,()=>openTx(null,{type:'expense',category:'kingdom',giving:'Tithe',amount:due,note:'Tithe on '+(tx.note||catOf(tx.category).name)}),'Record');
-  }else toast(editing?'Changes saved':wasSample?'First entry added. Example data is now hidden.':(fType==='income'?'Income added':'Expense added'));
+  }else toast(editing?'Changes saved':wasSample?'First entry added. Example data is now hidden.':(fType==='income'?'Income added':fType==='transfer'?`Moved ${money(tx.amount)} from ${tx.from} to ${tx.to}`:'Expense added'));
   render();
 });
 $('#fDelete').addEventListener('click',()=>{
@@ -1524,8 +1607,7 @@ if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostnam
 
 function openSettings(){
   renderInstallRow();
-  $('#openSym').textContent=SYM[state.settings.currency]||'';
-  $('#openBal').value=state.settings.opening?Number(state.settings.opening).toLocaleString('en-US',{maximumFractionDigits:2}):'';
+  const ob=openingTotal(); $('#openText').textContent=ob?`${money(ob)} in total across your accounts before your first entry.`:'What each account held before your first entry.';
   renderPinRow();
   $('#curSel').value=state.settings.currency;
   const real=state.txs.length>0;
@@ -1543,13 +1625,22 @@ function openSettings(){
   openSheet($('#setOverlay'));
 }
 $('#openSettings').addEventListener('click',openSettings);
-$('#openBal').addEventListener('change',e=>{
-  const raw=e.target.value.replace(/[^0-9.-]/g,''); const v=raw===''?0:parseFloat(raw);
-  if(isNaN(v)){toast('Enter the opening balance as a number.');return;}
-  state.settings={...state.settings,opening:Math.round(v*100)/100}; persistSettings(); render(); toast('Opening balance saved');
-  e.target.value=v?v.toLocaleString('en-US',{maximumFractionDigits:2}):'';
+function openStarting(){
+  const ac=state.settings.accounts||{}; const sym=esc(SYM[state.settings.currency]||'');
+  const rows=ACCOUNTS.map(a=>[a,ac[a]]).concat([['__other',state.settings.opening]]);
+  $('#openList').innerHTML=rows.map(([a,v])=>`<div class="budget-row" style="grid-template-columns:1fr 150px;padding:4px 0;border:0"><div><div class="nm">${a==='__other'?'Other money':esc(a)}</div>${a==='__other'?'<div class="fig">Money not in any account above</div>':''}</div><label class="money-in"><span>${sym}</span><input class="num" data-acct="${esc(a)}" inputmode="decimal" placeholder="0" value="${v?Number(v).toLocaleString('en-US',{maximumFractionDigits:2}):''}" aria-label="Starting balance for ${a==='__other'?'other money':esc(a)}"></label></div>`).join('');
+  $('#openErr').textContent=''; openSheet($('#openOverlay'));
+}
+$('#openForm').addEventListener('submit',e=>{
+  e.preventDefault(); const accounts={}; let other=0, bad=false;
+  $$('#openList input').forEach(i=>{const raw=i.value.replace(/[^0-9.-]/g,''); if(raw==='')return; const v=parseFloat(raw); if(isNaN(v)){bad=true;return;} if(i.dataset.acct==='__other')other=Math.round(v*100)/100; else if(v) accounts[i.dataset.acct]=Math.round(v*100)/100;});
+  if(bad){$('#openErr').textContent='Enter each balance as a number, for example 150000.';return;}
+  state.settings={...state.settings,accounts,opening:other}; persistSettings(); closeSheet($('#openOverlay')); render(); toast('Starting balances saved');
 });
-$('#setOpening').addEventListener('click',()=>{openSettings();setTimeout(()=>{$('#openBal').scrollIntoView({block:'center',behavior:'smooth'});$('#openBal').focus();},250);});
+$('#openBtn').addEventListener('click',()=>{closeSheet($('#setOverlay'));setTimeout(openStarting,200);});
+$('#setOpening').addEventListener('click',openStarting);
+$('#moveMoney').addEventListener('click',()=>openTx(null,{type:'transfer'}));
+$('#acctGrid').addEventListener('click',e=>{const t=e.target.closest('.acct');if(!t)return;state.acct=t.dataset.acct;state.cat='all';state.type='all';$('#acctSel').value=state.acct;$('#catSel').value='all';$$('#typeSeg button').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.t==='all')));state.period='all';go('transactions');});
 $('#curSel').addEventListener('change',e=>{state.settings={...state.settings,currency:e.target.value};persistSettings();render();toast('Currency updated');});
 $('#toggleSamples').addEventListener('click',()=>{state.settings={...state.settings,hideSamples:!state.settings.hideSamples};persistSettings();render();closeSheet($('#setOverlay'));});
 $('#connectNow').addEventListener('click',()=>{openSettings();$('#ghBtn').click();setTimeout(()=>$('#ghForm').scrollIntoView({block:'center',behavior:'smooth'}),250);});
@@ -1562,7 +1653,7 @@ $('#wipeBtn').addEventListener('click',()=>{
 });
 $('#exportBtn').addEventListener('click',()=>{
   if(!state.txs.length){toast('There are no transactions to export yet.');return;}
-  const rows=[['Date','Type','Category','Amount','Currency','Paid with / into','Giving type','Note']].concat([...state.txs].sort(sorter).map(t=>[t.date,t.type,catOf(t.category).name,t.amount,state.settings.currency,t.method||'',t.category==='kingdom'?(t.giving||'Tithe'):'',t.note||'']));
+  const rows=[['Date','Type','Category','Amount','Currency','Paid with / into','Giving type','Note']].concat([...state.txs].sort(sorter).map(t=>[t.date,t.type,catOf(t.category).name,t.amount,state.settings.currency,t.type==='transfer'?`${t.from} → ${t.to}`:(t.method||''),t.category==='kingdom'?(t.giving||'Tithe'):'',t.note||'']));
   const csv=rows.map(r=>r.map(v=>{const s=String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(',')).join('\n');
   const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
   const a=document.createElement('a');a.href=url;a.download=`kobo-ledger-${today()}.csv`;document.body.appendChild(a);a.click();a.remove();
